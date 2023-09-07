@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\controller\Backend;
-
+use app\admin\model\AdminGroupAccess;
 class Dashboard extends Backend
 {
     public function initialize(): void
@@ -11,6 +11,11 @@ class Dashboard extends Backend
         parent::initialize();
     }
 
+    public function getAgentCount(){
+       $this->success('', [
+            'counts' => AdminGroupAccess::count()
+        ]);
+    }
     public function dashboard()
     {
         $this->success('', [

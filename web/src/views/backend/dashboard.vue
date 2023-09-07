@@ -20,9 +20,8 @@
                         <div class="small-panel-content">
                             <div class="content-left">
                                 <Icon color="#74A8B5" size="20" name="fa fa-users" />
-                                <span id="users_number">9486</span>
+                                <span id="users_number">{{ state.counts }}</span>
                             </div>
-                            <div class="content-right">+28%</div>
                         </div>
                     </div>
                 </el-col>
@@ -34,16 +33,11 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive, nextTick, onActivated, watch, onBeforeMount } from 'vue'
 import headerSvg from '/@/assets/dashboard/header-1.svg'
-import coffeeSvg from '/@/assets/dashboard/coffee.svg'
 import { CountUp } from 'countup.js'
-import * as echarts from 'echarts'
 import { useNavTabs } from '/@/stores/navTabs'
-import { useTemplateRefsList } from '@vueuse/core'
-import { dashboard } from '/@/api/backend/dashboard'
+import { getAgentCount } from '/@/api/backend/dashboard'
 import { useI18n } from 'vue-i18n'
-import { Local } from '/@/utils/storage'
 import { useAdminInfo } from '/@/stores/adminInfo'
-import { WORKING_TIME } from '/@/stores/constant/cacheKey'
 import { getGreet } from '/@/utils/common'
 import { useEventListener } from '@vueuse/core'
 let workTimer: number
@@ -52,26 +46,20 @@ defineOptions({
     name: 'dashboard',
 })
 
-const d = new Date()
 const { t } = useI18n()
 const navTabs = useNavTabs()
 const adminInfo = useAdminInfo()
-const chartRefs = useTemplateRefsList<HTMLDivElement>()
 
 const state: {
     charts: any[]
-    remark: string
+    counts: string
     workingTimeFormat: string
     pauseWork: boolean
 } = reactive({
     charts: [],
-    remark: 'dashboard.Loading',
+    counts: '0',
     workingTimeFormat: '',
     pauseWork: false,
-})
-
-dashboard().then((res) => {
-    state.remark = res.data.remark
 })
 
 const countUpFun = (id: string) => {
@@ -87,12 +75,8 @@ const countUpFun = (id: string) => {
 }
 
 const initCountUp = () => {
-    countUpFun('user_reg_number')
-    countUpFun('file_number')
     countUpFun('users_number')
-    countUpFun('addons_number')
 }
-
 
 const echartsResize = () => {
     nextTick(() => {
@@ -102,108 +86,20 @@ const echartsResize = () => {
     })
 }
 
-const onChangeWorkState = () => {
-    const time = parseInt((new Date().getTime() / 1000).toString())
-    const workingTime = Local.get(WORKING_TIME)
-    if (state.pauseWork) {
-        // 继续工作
-        workingTime.pauseTime += time - workingTime.startPauseTime
-        workingTime.startPauseTime = 0
-        Local.set(WORKING_TIME, workingTime)
-        state.pauseWork = false
-        startWork()
-    } else {
-        // 暂停工作
-        workingTime.startPauseTime = time
-        Local.set(WORKING_TIME, workingTime)
-        clearInterval(workTimer)
-        state.pauseWork = true
-    }
-}
-
-const startWork = () => {
-    const workingTime = Local.get(WORKING_TIME) || { date: '', startTime: 0, pauseTime: 0, startPauseTime: 0 }
-    const currentDate = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
-    const time = parseInt((new Date().getTime() / 1000).toString())
-
-    if (workingTime.date != currentDate) {
-        workingTime.date = currentDate
-        workingTime.startTime = time
-        workingTime.pauseTime = workingTime.startPauseTime = 0
-        Local.set(WORKING_TIME, workingTime)
-    }
-
-    let startPauseTime = 0
-    if (workingTime.startPauseTime <= 0) {
-        state.pauseWork = false
-        startPauseTime = 0
-    } else {
-        state.pauseWork = true
-        startPauseTime = time - workingTime.startPauseTime // 已暂停时间
-    }
-
-    let workingSeconds = time - workingTime.startTime - workingTime.pauseTime - startPauseTime
-
-    state.workingTimeFormat = formatSeconds(workingSeconds)
-    if (!state.pauseWork) {
-        workTimer = window.setInterval(() => {
-            workingSeconds++
-            state.workingTimeFormat = formatSeconds(workingSeconds)
-        }, 1000)
-    }
-}
-
-const formatSeconds = (seconds: number) => {
-    var secondTime = 0 // 秒
-    var minuteTime = 0 // 分
-    var hourTime = 0 // 小时
-    var dayTime = 0 // 天
-    var result = ''
-
-    if (seconds < 60) {
-        secondTime = seconds
-    } else {
-        // 获取分钟，除以60取整数，得到整数分钟
-        minuteTime = Math.floor(seconds / 60)
-        // 获取秒数，秒数取佘，得到整数秒数
-        secondTime = Math.floor(seconds % 60)
-        // 如果分钟大于60，将分钟转换成小时
-        if (minuteTime >= 60) {
-            // 获取小时，获取分钟除以60，得到整数小时
-            hourTime = Math.floor(minuteTime / 60)
-            // 获取小时后取佘的分，获取分钟除以60取佘的分
-            minuteTime = Math.floor(minuteTime % 60)
-            if (hourTime >= 24) {
-                // 获取天数， 获取小时除以24，得到整数天
-                dayTime = Math.floor(hourTime / 24)
-                // 获取小时后取余小时，获取分钟除以24取余的分；
-                hourTime = Math.floor(hourTime % 24)
-            }
-        }
-    }
-
-    result =
-        hourTime +
-        t('dashboard.hour') +
-        ((minuteTime >= 10 ? minuteTime : '0' + minuteTime) + t('dashboard.minute')) +
-        ((secondTime >= 10 ? secondTime : '0' + secondTime) + t('dashboard.second'))
-    if (dayTime > 0) {
-        result = dayTime + t('dashboard.day') + result
-    }
-    return result
-}
-
 onActivated(() => {
     echartsResize()
 })
 
 onMounted(() => {
-    startWork()
-    initCountUp()
+    getAgentCount().then((res) => {
+        state.counts = res.data.counts
+        initCountUp()
+    })
     useEventListener(window, 'resize', echartsResize)
 })
 
 onBeforeMount(() => {
+
     for (const key in state.charts) {
         state.charts[key].dispose()
     }

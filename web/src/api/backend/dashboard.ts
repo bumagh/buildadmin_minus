@@ -8,3 +8,10 @@ export function dashboard() {
         method: 'get',
     })
 }
+
+export function getAgentCount() {
+    return createAxios({
+        url: url + 'getAgentCount',
+        method: 'get',
+    })
+}
