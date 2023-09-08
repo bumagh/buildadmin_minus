@@ -47,7 +47,7 @@ const baTable = new baTableClass(
             { type: 'selection', align: 'center', operator: false },
             { label: t('Id'), prop: 'id', align: 'center', operator: '=', operatorPlaceholder: t('Id'), width: 70 },
             { label: t('auth.admin.username'), prop: 'username', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },
-            { label: t('auth.admin.nickname'), prop: 'nickname', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },
+            { label: t('auth.admin.coin'), prop: 'coin', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },
             { label: t('auth.admin.grouping'), prop: 'group_name_arr', align: 'center', operator: false, render: 'tags' },
             { label: t('auth.admin.head portrait'), prop: 'avatar', align: 'center', render: 'image', operator: false },
             { label: t('auth.admin.mailbox'), prop: 'email', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },

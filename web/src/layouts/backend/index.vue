@@ -60,7 +60,6 @@ const init = () => {
         siteConfig.dataFill(res.data.siteConfig)
         terminal.changePort(res.data.terminal.installServicePort)
         terminal.changePackageManager(res.data.terminal.npmPackageManager)
-        console.log(res.data.adminInfo)
         adminInfo.dataFill(res.data.adminInfo)
 
         if (res.data.menus) {

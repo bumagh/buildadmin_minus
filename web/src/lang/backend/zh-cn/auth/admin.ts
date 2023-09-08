@@ -4,6 +4,7 @@ export default {
     grouping: '分组',
     'head portrait': '头像',
     mailbox: '邮箱',
+    coin:"金币",
     mobile: '手机号',
     'Last login': '最后登录',
     Password: '密码',
