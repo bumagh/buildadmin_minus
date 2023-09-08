@@ -14,11 +14,13 @@ export const useAdminInfo = defineStore('adminInfo', {
             refresh_token: '',
             // 是否是superAdmin，用于判定是否显示终端按钮等，不做任何权限判断
             super: false,
+            coin:0
         }
     },
     actions: {
         dataFill(state: AdminInfo) {
             this.$state = { ...this.$state, ...state }
+            console.log(state)
         },
         removeToken() {
             this.token = ''

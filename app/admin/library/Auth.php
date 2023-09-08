@@ -74,7 +74,7 @@ class Auth extends \ba\Auth
      * 允许输出的字段
      * @var array
      */
-    protected array $allowFields = ['id', 'username', 'nickname', 'avatar', 'last_login_time'];
+    protected array $allowFields = ['id', 'username', 'nickname', 'avatar', 'last_login_time','coin'];
 
     public function __construct(array $config = [])
     {

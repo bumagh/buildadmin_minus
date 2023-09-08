@@ -14,7 +14,7 @@
         </div>
         <div class="small-panel-box">
             <el-row :gutter="20">
-                <el-col :sm="12" :lg="6">
+                <el-col v-if="adminInfo.super == true" :sm="12" :lg="6">
                     <div class="small-panel users suspension">
                         <div class="small-panel-title">{{ t('dashboard.Total number of members') }}</div>
                         <div class="small-panel-content">
@@ -32,6 +32,21 @@
                             <div class="content-left">
                                 <Icon color="#74A8B5" size="20" name="fa fa-users" />
                                 <span id="users_sub_number">{{ state.subCounts }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </el-col>
+
+                <el-col :sm="12" :lg="6">
+                    <div class="small-panel users suspension">
+                        <div class="small-panel-title">{{ t('dashboard.Account coin') }}</div>
+                        <div class="small-panel-content">
+                            <div class="content-left">
+                                <Icon
+                                    color="#74A8B5"
+                                    size="20"
+                                    name="el-icon-Coin"/>
+                                <span id="admin_coin">{{ adminInfo.coin }}</span>
                             </div>
                         </div>
                     </div>
@@ -90,6 +105,7 @@ const countUpFun = (id: string) => {
 const initCountUp = () => {
     countUpFun('users_number')
     countUpFun('users_sub_number')
+    countUpFun('admin_coin')
 }
 
 const echartsResize = () => {
@@ -109,14 +125,12 @@ onMounted(() => {
         state.counts = res.data.counts
         state.subCounts = res.data.subCounts
         initCountUp()
-
     })
 
     useEventListener(window, 'resize', echartsResize)
 })
 
 onBeforeMount(() => {
-
     for (const key in state.charts) {
         state.charts[key].dispose()
     }

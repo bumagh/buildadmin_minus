@@ -5,6 +5,7 @@ export default {
     'Member registration': '会员注册量',
     'Total number of members': '代理商总数',
     'Total number of submembers': '子代理商总数',
+    'Account coin': '账户金币',
     'Number of installed plug-ins': '已装插件数',
     'Membership growth': '会员增长情况',
     'Annex growth': '附件增长情况',
