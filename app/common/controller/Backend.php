@@ -304,7 +304,8 @@ class Backend extends Api
         }
 
         // 数据权限
-        $dataLimitAdminIds = $this->getDataLimitAdminIds();
+        // $dataLimitAdminIds = $this->getDataLimitAdminIds();
+        $dataLimitAdminIds = $this->getDataLimitAdminIdsAndEqualGid();
         if ($dataLimitAdminIds) {
             $where[] = [$mainTableAlias . $this->dataLimitField, 'in', $dataLimitAdminIds];
         }
@@ -340,6 +341,40 @@ class Backend extends Api
             $adminIds = $this->auth->getGroupAdmins($allAuthGroups);
         }
         $adminIds[] = $this->auth->id;
+        return array_unique($adminIds);
+    }
+
+     /**
+     * 数据权限控制-获取有权限访问的管理员Ids和同级分组Ids
+     * @throws Throwable
+     */
+    protected function getDataLimitAdminIdsAndEqualGid(): array
+    {
+        if (!$this->dataLimit || $this->auth->isSuperAdmin()) {
+            return [];
+        }
+        $adminIds = [];
+        if ($this->dataLimit == 'parent') {
+            // 取得当前管理员的下级分组们
+            $parentGroups = $this->auth->getAdminChildGroups();
+            if ($parentGroups) {
+                // 取得分组内的所有管理员
+                $adminIds = $this->auth->getGroupAdmins($parentGroups);
+            }
+        } elseif (is_numeric($this->dataLimit) && $this->dataLimit > 0) {
+            // 在组内，可查看所有，不在组内，可查看自己的
+            $adminIds = $this->auth->getGroupAdmins([$this->dataLimit]);
+            return in_array($this->auth->id, $adminIds) ? [] : [$this->auth->id];
+        } elseif ($this->dataLimit == 'allAuth' || $this->dataLimit == 'allAuthAndOthers') {
+            // 取得拥有他所有权限的分组
+            $allAuthGroups = $this->auth->getAllAuthGroups($this->dataLimit);
+            // 取得分组内的所有管理员
+            $adminIds = $this->auth->getGroupAdmins($allAuthGroups);
+        }
+        //获得当前gid
+           $curGidAdminIds = $this->auth->getAdminIdsEqualGroups();
+        //活动gid的所有admin ids
+        $adminIds = array_merge($adminIds, $curGidAdminIds);
         return array_unique($adminIds);
     }
 

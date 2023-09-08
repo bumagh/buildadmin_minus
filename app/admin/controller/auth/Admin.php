@@ -43,7 +43,6 @@ class Admin extends Backend
         if ($this->request->param('select')) {
             $this->select();
         }
-
         list($where, $alias, $limit, $order) = $this->queryBuilder();
         $res = $this->model
             ->withoutField('login_failure,password,salt')

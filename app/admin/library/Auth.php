@@ -9,6 +9,7 @@ use think\facade\Config;
 use app\admin\model\Admin;
 use app\common\facade\Token;
 use app\admin\model\AdminGroup;
+use app\admin\model\AdminGroupAccess;
 
 /**
  * 管理员权限类
@@ -399,6 +400,20 @@ class Auth extends \ba\Auth
             $this->getGroupChildGroups($group['group_id'], $children);
         }
         return array_unique($children);
+    }
+    /**
+     * 获取管理员所在分组的同级分组ids
+     * @return array
+     * @throws Throwable
+     */
+    public function getAdminIdsEqualGroups(): array
+    {
+        $groupIds = AdminGroupAccess::where('uid', $this->id)->column('group_id');
+        $adminIds = [];
+        foreach ($groupIds as $groupid) {
+            $adminIds=AdminGroupAccess::where('group_id', $groupid)->column('uid');
+        }
+        return $adminIds;
     }
 
     /**
