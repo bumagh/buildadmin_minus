@@ -42,10 +42,7 @@
                         <div class="small-panel-title">{{ t('dashboard.Account coin') }}</div>
                         <div class="small-panel-content">
                             <div class="content-left">
-                                <Icon
-                                    color="#74A8B5"
-                                    size="20"
-                                    name="el-icon-Coin"/>
+                                <Icon color="#74A8B5" size="20" name="el-icon-Coin" />
                                 <span id="admin_coin">{{ adminInfo.coin }}</span>
                             </div>
                             <el-button class="content-right" type="primary" @click="handlePay" plain>充值</el-button>
@@ -55,6 +52,7 @@
             </el-row>
         </div>
     </div>
+    <PopupForm v-model=state.showDialog />
 </template>
 
 <script setup lang="ts">
@@ -67,6 +65,9 @@ import { useI18n } from 'vue-i18n'
 import { useAdminInfo } from '/@/stores/adminInfo'
 import { getGreet } from '/@/utils/common'
 import { useEventListener } from '@vueuse/core'
+
+import PopupForm from './popupForm.vue'
+
 let workTimer: number
 
 defineOptions({
@@ -83,12 +84,14 @@ const state: {
     subCounts: string
     workingTimeFormat: string
     pauseWork: boolean
+    showDialog: boolean
 } = reactive({
     charts: [],
     counts: '0',
     subCounts: '0',
     workingTimeFormat: '',
     pauseWork: false,
+    showDialog: false,
 })
 
 const countUpFun = (id: string) => {
@@ -102,8 +105,8 @@ const countUpFun = (id: string) => {
         }
     })
 }
-const handlePay = ()=>{
-    console.log("pay button clicked");
+const handlePay = () => {
+    state.showDialog = true
 }
 const initCountUp = () => {
     countUpFun('users_number')

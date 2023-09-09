@@ -309,7 +309,6 @@ class Backend extends Api
         if ($dataLimitAdminIds) {
             $where[] = [$mainTableAlias . $this->dataLimitField, 'in', $dataLimitAdminIds];
         }
-
         return [$where, $alias, $limit, $order];
     }
 
