@@ -4,6 +4,7 @@ export default {
     grouping: 'Grouping',
     'head portrait': 'Profile picture',
     mailbox: 'Mailbox',
+    coin: 'Coin',
     mobile: 'Mobile Number',
     'Last login': 'Last login',
     Password: 'Password',

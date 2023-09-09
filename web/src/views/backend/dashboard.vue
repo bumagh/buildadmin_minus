@@ -48,6 +48,7 @@
                                     name="el-icon-Coin"/>
                                 <span id="admin_coin">{{ adminInfo.coin }}</span>
                             </div>
+                            <el-button class="content-right" type="primary" @click="handlePay" plain>充值</el-button>
                         </div>
                     </div>
                 </el-col>
@@ -101,7 +102,9 @@ const countUpFun = (id: string) => {
         }
     })
 }
-
+const handlePay = ()=>{
+    console.log("pay button clicked");
+}
 const initCountUp = () => {
     countUpFun('users_number')
     countUpFun('users_sub_number')
@@ -166,67 +169,8 @@ watch(
         line-height: 30px;
         color: var(--ba-color-primary-light);
     }
-    .welcome-note {
-        padding-top: 6px;
-        font-size: 15px;
-        color: var(--el-text-color-primary);
-    }
 }
-.working {
-    height: 130px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    height: 100%;
-    position: relative;
-    &:hover {
-        .working-coffee {
-            -webkit-transform: translateY(-4px) scale(1.02);
-            -moz-transform: translateY(-4px) scale(1.02);
-            -ms-transform: translateY(-4px) scale(1.02);
-            -o-transform: translateY(-4px) scale(1.02);
-            transform: translateY(-4px) scale(1.02);
-            z-index: 999;
-        }
-    }
-    .working-coffee {
-        transition: all 0.3s ease;
-        width: 80px;
-    }
-    .working-text {
-        display: block;
-        width: 100%;
-        font-size: 15px;
-        text-align: center;
-        color: var(--el-text-color-primary);
-    }
-    .working-opt {
-        position: absolute;
-        top: -40px;
-        right: 10px;
-        background-color: rgba($color: #000000, $alpha: 0.3);
-        padding: 10px 20px;
-        border-radius: 20px;
-        color: var(--ba-bg-color-overlay);
-        transition: all 0.3s ease;
-        cursor: pointer;
-        opacity: 0;
-        z-index: 999;
-        &:active {
-            background-color: rgba($color: #000000, $alpha: 0.6);
-        }
-    }
-    &:hover {
-        .working-opt {
-            opacity: 1;
-            top: 0;
-        }
-        .working-done {
-            opacity: 1;
-            top: 50px;
-        }
-    }
-}
+
 .small-panel-box {
     margin-top: 20px;
 }

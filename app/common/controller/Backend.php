@@ -304,8 +304,8 @@ class Backend extends Api
         }
 
         // 数据权限
-        // $dataLimitAdminIds = $this->getDataLimitAdminIds();
-        $dataLimitAdminIds = $this->getDataLimitAdminIdsAndEqualGid();
+        $dataLimitAdminIds = $this->getDataLimitAdminIds();
+        // $dataLimitAdminIds = $this->getDataLimitAdminIdsAndEqualGid();
         if ($dataLimitAdminIds) {
             $where[] = [$mainTableAlias . $this->dataLimitField, 'in', $dataLimitAdminIds];
         }
