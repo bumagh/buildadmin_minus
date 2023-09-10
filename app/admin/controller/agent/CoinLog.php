@@ -73,6 +73,7 @@ class CoinLog extends Backend
      */
     public function add(int $agentId = 0): void
     {
+       
         if ($this->request->isPost()) {
             $data = $this->request->post();
             Admin::where('id',  $data['admin_id'])->update(["coin"=>$data['after']]);

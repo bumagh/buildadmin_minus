@@ -52,7 +52,7 @@
             </el-row>
         </div>
     </div>
-    <PopupForm v-model=state.showDialog />
+    <PopupForm v-model="state.showDialog" @cancel-dialog="cancelDialog" @submit-callback="submitCallback" />
 </template>
 
 <script setup lang="ts">
@@ -67,13 +67,24 @@ import { getGreet } from '/@/utils/common'
 import { useEventListener } from '@vueuse/core'
 
 import PopupForm from './popupForm.vue'
+import { AdminInfo } from '/@/stores/interface'
 
 let workTimer: number
 
 defineOptions({
     name: 'dashboard',
 })
-
+const cancelDialog = (cancelData: boolean) => {
+    state.showDialog = false
+}
+const submitCallback = () => {
+    getAgentCount().then((res) => {
+        state.counts = res.data.counts
+        state.subCounts = res.data.subCounts
+        adminInfo.coin = res.data.adminInfo.coin
+        initCountUp()
+    })
+}
 const { t } = useI18n()
 const navTabs = useNavTabs()
 const adminInfo = useAdminInfo()
@@ -128,6 +139,7 @@ onActivated(() => {
 
 onMounted(() => {
     getAgentCount().then((res) => {
+       
         state.counts = res.data.counts
         state.subCounts = res.data.subCounts
         initCountUp()

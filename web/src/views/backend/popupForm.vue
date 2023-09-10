@@ -41,18 +41,20 @@ import { useI18n } from 'vue-i18n'
 import FormItem from '/@/components/formItem/index.vue'
 import { ref } from 'vue'
 import { payCheck } from '/@/api/backend/module'
-import { useAdminInfo } from '/@/stores/adminInfo';
+import { useAdminInfo } from '/@/stores/adminInfo'
+import createAxios from '/@/utils/axios'
+import { addCoinLog } from '/@/api/backend/dashboard'
 interface FormData {
     coin: number
     payType: string
     money: number
-    agentId:number
+    agentId: number
 }
 const formdata = ref<FormData>({
     coin: 100000,
     payType: 'GooglePay',
     money: 1,
-    agentId:useAdminInfo().id
+    agentId: useAdminInfo().id,
 })
 interface Props {
     showDialog: boolean
@@ -60,21 +62,33 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
     showDialog: false,
 })
-
+const emit = defineEmits<{
+    (e: 'cancelDialog', cancelData: boolean): void
+    (e: 'submitCallback'): void
+}>()
 const { t } = useI18n()
-const handleCancel = () => {}
+const handleCancel = () => {
+    emit('cancelDialog', true)
+}
 const handleSubmit = () => {
     //todo
     //pay();
-    console.log(formdata.value)
+    addCoinLog({
+        admin_id: formdata.value.agentId,
+        coin: formdata.value.coin,
+        after: formdata.value.coin + useAdminInfo().coin,
+        before: useAdminInfo().coin,
+    }).then(() => {
+        emit('cancelDialog', true)
+        emit('submitCallback')
+
+    })
 }
 const handleChangeMoney = () => {
     //按1美元10 0000
     formdata.value.coin = formdata.value.money * 100000
 }
-const handleChangeAgentId = ()=>{
-
-}
+const handleChangeAgentId = () => {}
 </script>
 
 <style scoped lang="scss">

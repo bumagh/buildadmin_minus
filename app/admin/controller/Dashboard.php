@@ -22,7 +22,8 @@ class Dashboard extends Backend
        $this->success('', [
             'counts' => AdminGroupAccess::count(),
             'subCounts' => $subCounts,
-            'coin'=>$coin
+            'coin'=>$coin,
+            "adminInfo"=>Admin::query()->where("id",$curUid)->select()->toArray()[0]
         ]);
     }
 

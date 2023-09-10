@@ -57,6 +57,12 @@ export interface AdminInfo {
     coin: number
 }
 
+export interface CoinLog {
+    admin_id:number
+    coin: number
+    before: number
+    after: number
+}
 export interface UserInfo {
     id: number
     username: string
