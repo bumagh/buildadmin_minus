@@ -55,7 +55,7 @@
                         :label="t('agent.coinLog.coin')"
                         type="number"
                         prop="coin"
-                        :input-attr="{ min: 1, step: 100, onInput: changeCoin }"
+                        :input-attr="{ min: 1, max: 100, step: 100, onInput: changeCoin }"
                         v-model.number="baTable.form.items!.coin"
                         :placeholder="t('Please input field', { field: t('agent.coinLog.coin') })"
                     />
@@ -148,6 +148,21 @@ const changeCoin = (value: string) => {
 
 const rules: Partial<Record<string, FormItemRule[]>> = reactive({
     admin_id: [buildValidatorData({ name: 'required', message: t('Please select field') })],
+    coin: [
+        buildValidatorData({ name: 'integer', message: t('请输入整数') }),
+
+        {
+            validator: (rule: any, val: number, callback: Function) => {
+                // console.log(val);
+                // if (val > 5) {
+                //     console.log("error")
+                //     return callback(new Error('Please enter the correct field'))
+                // }
+                return callback()
+            },
+            trigger: 'blur',
+        },
+    ],
     create_time: [buildValidatorData({ name: 'date', title: t('agent.coinLog.create_time') })],
 })
 </script>

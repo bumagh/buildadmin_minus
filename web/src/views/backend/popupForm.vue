@@ -20,7 +20,7 @@
         <FormItem
             label="充值金额"
             v-model="formdata.money"
-            :input-attr="{ onChange: handleChangeMoney, min: 1, step: 1 }"
+            :input-attr="{ onChange: handleChangeMoney, min: 1, max:10000, step: 1, 'controls-position':'right','step-strictly':true }"
             type="number"
             placeholder="输入充值金额"
         />

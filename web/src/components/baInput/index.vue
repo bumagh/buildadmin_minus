@@ -46,8 +46,9 @@ export default defineComponent({
 
         // string number textarea password
         const sntp = () => {
+            const comp = props.type === 'number' ? resolveComponent('el-input-number') : resolveComponent('el-input')
             return () =>
-                createVNode(resolveComponent('el-input'), {
+                createVNode(comp, {
                     type: props.type == 'string' ? 'text' : props.type,
                     ...props.attr,
                     modelValue: props.modelValue,
